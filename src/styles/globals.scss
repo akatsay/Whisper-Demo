@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Fragment+Mono&display=swap');
+$bg-cl: #fff685;
+$ct-cl: #00ddff;
+$bt-cl: #ff1d58;
+$fb-cl: #0049b7;
+
+body {
+  background-color: $bg-cl;
+  font-family: 'Fragment Mono', monospace;
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  & .instructions-container {
+    & .instruction-title {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    margin-top: 50px;
+    background-color: $ct-cl;
+    border-radius: 10px;
+    padding: 10px;
+
+    & .instruction {
+      margin: 40px;
+    }
+  }
+  & .link {
+    display: block;
+    text-decoration: none;
+    color: white;
+    background-color: $bt-cl;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 30px;
+    font-size: 20px;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  .error {
+    font-weight: bold;
+    font-size: 24px;
+    align-self: center;
+    margin-top: 50px;
+    color: crimson;
+  }
+  
+  .loader {
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #3498db;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 0.5s linear infinite;
+    margin: auto;
+    margin-top: 100px;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}
