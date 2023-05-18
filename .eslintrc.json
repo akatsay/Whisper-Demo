@@ -4,6 +4,7 @@
     "es2021": true
   },
   "extends": [
+    "next",
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended"
@@ -29,9 +30,9 @@
     "quotes": [
       "error",
       "single"
-    ], 
+    ],
     "semi": [
-      "warn",
+      "error",
       "never"
     ],
     "react/jsx-uses-react": "off",

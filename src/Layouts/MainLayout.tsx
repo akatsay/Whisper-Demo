@@ -10,7 +10,7 @@ export function MainLayout({
   return (
     <>
       <Head>
-        <title>{title} | NextJoke</title>
+        <title>{title}</title>
         <meta
           name="keywords"
           content="nextjs, WhisperAPI, OpenAI"
