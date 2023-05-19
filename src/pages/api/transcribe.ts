@@ -17,14 +17,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   })
   const openai = new OpenAIApi(configuration)
 
-  const formData: any = new FormData()
-  formData.append('file', req.body)
-
-  console.log(formData)
-
   try {
+
+    const base64Data = req.body
+    const decodedData = Buffer.from(base64Data, 'base64').toString('utf-8')
+
     const data = await openai.createTranscription(
-      formData,
+      decodedData,
       'whisper-1',
       'en',
     )

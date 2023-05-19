@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { MainLayout } from '@/Layouts/MainLayout'
 import { NextPage } from 'next'
 
@@ -7,6 +7,7 @@ import { ChangeEvent } from 'react'
 const Home: NextPage = () => {
 
   const [videofile, setVideofile] = useState<File | null>(null)
+  const [videoBase64, setVideoBase64] = useState<string | null>(null)
   const [convertedText, setConvertedText] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
 
@@ -17,16 +18,32 @@ const Home: NextPage = () => {
     }
   }
 
+  const convertVideoToBase64 = async (video: File | null) => {
+    const reader: any = new FileReader()
+    await reader.readAsDataURL(video)
+    reader.onloadend = () => {
+      const base64Data = reader.result as string
+      setVideoBase64(base64Data)
+    }
+    reader.onerror = (error: any) => {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    if (videofile) {
+      convertVideoToBase64(videofile)
+    }
+  }, [videofile])
+
   const handleSubmit = async () => {
     setLoading(true)
 
     try {
-      const formData: any = new FormData()
-      formData.append('file', videofile)
 
       const response = await fetch('http://localhost:3000/api/transcribe', {
         method: 'POST',
-        body: formData,
+        body: videoBase64,
       })
 
       if (!response.ok) {
@@ -34,7 +51,7 @@ const Home: NextPage = () => {
       }
 
       const data = await response.json()
-      setConvertedText(data.transcription) // Assuming the API response contains the transcription
+      setConvertedText(data.transcription)
     } catch (error: any) {
       console.log(error.message)
     }
