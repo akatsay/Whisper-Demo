@@ -24,6 +24,7 @@ const Home: NextPage = () => {
     data.append('model', 'whisper-1')
     data.append('language', 'en')
     setFormData(data)
+    console.log(data)
   }, [videofile])
 
   const handleSubmit = async () => {
