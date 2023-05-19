@@ -7,7 +7,6 @@ import { ChangeEvent } from 'react'
 const Home: NextPage = () => {
 
   const [videofile, setVideofile] = useState<File | null>(null)
-  const [videoBase64, setVideoBase64] = useState<string | null>(null)
   const [convertedText, setConvertedText] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
 
@@ -18,32 +17,20 @@ const Home: NextPage = () => {
     }
   }
 
-  const convertVideoToBase64 = async (video: File | null) => {
-    const reader: any = new FileReader()
-    await reader.readAsDataURL(video)
-    reader.onloadend = () => {
-      const base64Data = reader.result as string
-      setVideoBase64(base64Data)
-    }
-    reader.onerror = (error: any) => {
-      console.log(error)
-    }
-  }
-
-  useEffect(() => {
-    if (videofile) {
-      convertVideoToBase64(videofile)
-    }
-  }, [videofile])
-
   const handleSubmit = async () => {
     setLoading(true)
 
     try {
 
+      const formData: any = new FormData()
+      formData.append('video', videofile)
+
       const response = await fetch('http://localhost:3000/api/transcribe', {
         method: 'POST',
-        body: videoBase64,
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        body: formData,
       })
 
       if (!response.ok) {
