@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
       headers: {
-        Authorization: `Bearer ${'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'}`,
+        Authorization: `Bearer ${process.env.API}`,
       },
       method: 'POST',
       body: formData,
@@ -29,6 +29,3 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(500).json(e)
   }
 }
-
-// https://api.openai.com/v1/audio/transcriptions
-// to bypass the library
