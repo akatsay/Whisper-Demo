@@ -1,22 +1,14 @@
 import { useState } from 'react'
 import { MainLayout } from '@/Layouts/MainLayout'
 import { NextPage } from 'next'
-import { OpenAIApi, Configuration } from 'openai'
 
 import { ChangeEvent } from 'react'
-
-const API = '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'
 
 const Home: NextPage = () => {
 
   const [videofile, setVideofile] = useState<File | null>(null)
   const [convertedText, setConvertedText] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
-
-  const configuration = new Configuration({
-    apiKey: API,
-  })
-  const openai = new OpenAIApi(configuration)
 
   const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -29,10 +21,24 @@ const Home: NextPage = () => {
     setLoading(true)
 
     try {
-      const data = await openai.createTranscription(videofile, 'whisper-1', 'en')
-    } catch (e: any) {
-      console.log(e.message)
+      const formData: any = new FormData()
+      formData.append('file', videofile)
+
+      const response = await fetch('http://localhost:3000/api/transcribe', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to transcribe video.')
+      }
+
+      const data = await response.json()
+      setConvertedText(data.transcription) // Assuming the API response contains the transcription
+    } catch (error: any) {
+      console.log(error.message)
     }
+
     setLoading(false)
   }
 
