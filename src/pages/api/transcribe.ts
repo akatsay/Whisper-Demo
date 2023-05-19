@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { OpenAIApi, Configuration } from 'openai'
 
 export const config = {
   api: {
@@ -10,17 +9,21 @@ export const config = {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const configuration = new Configuration({
-    apiKey: process.env.API,
-  })
-  const openai = new OpenAIApi(configuration)
-
   try {
-    const videoData = req.body
-    console.log(videoData)
 
-    const data = await openai.createTranscription(videoData, 'whisper-1', 'en')
-    res.status(200).json(data)
+    const formData = req.body
+    console.log(formData)
+
+    const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+      headers: {
+        Authorization: `Bearer ${'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'}`,
+      },
+      method: 'POST',
+      body: formData,
+    })
+
+    res.status(200).json(response)
+
   } catch (e: any) {
     console.log(e.message)
     res.status(500).json(e)

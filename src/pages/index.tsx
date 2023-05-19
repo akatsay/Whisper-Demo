@@ -7,6 +7,7 @@ import { ChangeEvent } from 'react'
 const Home: NextPage = () => {
 
   const [videofile, setVideofile] = useState<File | null>(null)
+  const [formData, setFormData] = useState<FormData | null>(null)
   const [convertedText, setConvertedText] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
 
@@ -17,13 +18,17 @@ const Home: NextPage = () => {
     }
   }
 
+  useEffect(() => {
+    const data: any = new FormData()
+    data.append('file', videofile)
+    data.append('model', 'whisper-1')
+    data.append('language', 'en')
+    setFormData(data)
+  }, [videofile])
+
   const handleSubmit = async () => {
     setLoading(true)
-
     try {
-
-      const formData: any = new FormData()
-      formData.append('video', videofile)
 
       const response = await fetch('http://localhost:3000/api/transcribe', {
         method: 'POST',
@@ -33,12 +38,10 @@ const Home: NextPage = () => {
         body: formData,
       })
 
-      if (!response.ok) {
-        throw new Error('Failed to transcribe video.')
-      }
-
       const data = await response.json()
-      setConvertedText(data.transcription)
+
+      setConvertedText(data.text)
+
     } catch (error: any) {
       console.log(error.message)
     }
@@ -53,7 +56,7 @@ const Home: NextPage = () => {
           className='file-input' 
           onChange={handleFile} 
           type='file' 
-          accept="video/mp4,video/x-m4v,video/*" 
+          accept='video/mp4,video/x-m4v,video/*' 
         />
         <button  
           disabled={!videofile && true}
