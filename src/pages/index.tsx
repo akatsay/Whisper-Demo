@@ -24,13 +24,11 @@ const Home: NextPage = () => {
     data.append('model', 'whisper-1')
     data.append('language', 'en')
     setFormData(data)
-    console.log(data)
   }, [videofile])
 
   const handleSubmit = async () => {
     setLoading(true)
     try {
-
       const response = await fetch('http://localhost:3000/api/transcribe', {
         method: 'POST',
         headers: {

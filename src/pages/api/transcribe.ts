@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+const multer = require('multer')
 
 export const config = {
   api: {
