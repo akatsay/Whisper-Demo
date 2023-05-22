@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { MainLayout } from '@/Layouts/MainLayout'
 import { NextPage } from 'next'
@@ -27,17 +28,15 @@ const Home: NextPage = () => {
   const handleSubmit = async () => {
     setLoading(true)
     try {
-      const response = await fetch('http://localhost:5000/api/transcribe', {
+      const response: {text: string} = await axios.post('http://localhost:5000/api/transcribe', {
         method: 'POST',
-        // headers: {
-        //   'Content-Type': 'multipart/form-data'
-        // },
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
         body: formData,
       })
 
-      const data = await response.json()
-
-      setConvertedText(data.text)
+      setConvertedText(response.text)
 
     } catch (error: any) {
       console.log(error.message)
