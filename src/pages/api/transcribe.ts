@@ -1,5 +1,9 @@
+import { timeStamp } from 'console'
 import { NextApiRequest, NextApiResponse } from 'next'
-const multer = require('multer')
+import nextConnect from 'next-connect'
+// const multer = require('multer')
+const formidable = require('formidable')
+const fs = require('fs')
 
 export const config = {
   api: {

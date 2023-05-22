@@ -21,19 +21,17 @@ const Home: NextPage = () => {
   useEffect(() => {
     const data: any = new FormData()
     data.append('file', videofile)
-    data.append('model', 'whisper-1')
-    data.append('language', 'en')
     setFormData(data)
   }, [videofile])
 
   const handleSubmit = async () => {
     setLoading(true)
     try {
-      const response = await fetch('http://localhost:3000/api/transcribe', {
+      const response = await fetch('http://localhost:5000/api/transcribe', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        },
+        // headers: {
+        //   'Content-Type': 'multipart/form-data'
+        // },
         body: formData,
       })
 
