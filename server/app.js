@@ -1,4 +1,5 @@
-import axios from 'axios'
+require('dotenv').config()
+const axios = require('axios')
 const express = require('express')
 const multer = require('multer')
 const cors = require('cors')
@@ -8,24 +9,29 @@ const upload = multer()
 
 app.use(cors())
 
-app.get('/api/transcribe', (req, res) => {
-  res.json({ msg: 'poshel ti' })
-  console.log('server hit')
-})
-
 app.post('/api/transcribe', upload.single('file'), async (req, res) => {
-  console.log(req.file)
 
-  const response = await axios.post('https://api.openai.com/v1/audio/transcriptions', {
-    headers: {
-      Authorization: `Bearer ${process.env.API}`,
-      'Content-Type': 'multipart/form-data'
-    },
-    method: 'POST',
-    body: formData,
-  })
+  const formData = new FormData()
+  formData.append('file', req.file)
+  formData.append('model', 'whisper-1')
+  formData.append('language', 'en')
 
-  res.json({ message: 'Successfully uploaded file' })
+  try {
+    const response = await axios.post('https://api.openai.com/v1/audio/transcriptions', {
+      formData,
+      headers: {
+        'Authorization': `Bearer ${process.env.API}`,
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+
+    res.json(response)
+
+  } catch (e) {
+    console.log(e.message)
+    res.status(500).json({msg: `error sending request to openai: ${e.message}`})
+  }
+
 })
 
 app.listen('5000', () => {
