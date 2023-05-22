@@ -16,21 +16,40 @@ app.post('/api/transcribe', upload.single('file'), async (req, res) => {
   formData.append('model', 'whisper-1')
   formData.append('language', 'en')
 
+  console.log(req.file)
+  console.log(formData)
+
   try {
-    const response = await axios.post('https://api.openai.com/v1/audio/transcriptions', {
-      formData,
+    const response = await axios.post('https://api.openai.com/v1/audio/transcriptions', formData, {
       headers: {
         'Authorization': `Bearer ${process.env.API}`,
-        'Content-Type': 'multipart/form-data'
       }
     })
 
-    res.json(response)
-
+    res.json(response.data)
   } catch (e) {
     console.log(e.message)
-    res.status(500).json({msg: `error sending request to openai: ${e.message}`})
+    res.status(500).json({ msg: `error sending request to openai: ${e.message}` })
   }
+
+  // try {
+
+  //   const res = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+  //     headers: {
+  //       Authorization: `Bearer ${process.env.API}`,
+  //     },
+  //     method: 'POST',
+  //     body: formData,
+  //   })
+
+  //   const data = await res.json()
+
+  //   res.json(data)
+
+  // } catch (e) {
+  //   console.log(e.message)
+  //   res.status(500).json({msg: `error sending request to openai: ${e.message}`})
+  // }
 
 })
 
