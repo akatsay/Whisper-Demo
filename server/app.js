@@ -3,8 +3,8 @@ const { Configuration, OpenAIApi } = require('openai')
 const express = require('express')
 const multer = require('multer')
 const cors = require('cors')
-const fs = require('fs')
-const path = require('path')
+const {Readable} = require('stream')
+
 
 const app = express()
 const upload = multer()
@@ -13,31 +13,21 @@ app.use(cors())
 
 app.post('/api/transcribe', upload.single('file'), async (req, res) => {
 
-  // const fileStream = fs.createReadStream(req.file)
-  // const fileStream = fs.createReadStream(__dirname + '/uploads/Nelson.mp4')
-
-
   console.log(req.file)
 
   try {
-
     const fileBuffer = req.file.buffer
-    const fileName = req.file.originalname
-    const filePath = path.join(__dirname, 'uploads', fileName)
-
-    fs.writeFileSync(filePath, fileBuffer)
-    const fileStream = fs.createReadStream(filePath)
+    const stream = Readable.from(fileBuffer)
+    stream.path = req.file.originalname
 
     const configuration = new Configuration({
       apiKey: process.env.API,
     })
     const openai = new OpenAIApi(configuration)
 
-    const data = await openai.createTranscription(fileStream, 'whisper-1', 'en')
+    const data = await openai.createTranscription(stream, 'whisper-1', 'en')
     console.log(data.data.text)
     res.json(data.data.text)
-
-    fs.unlinkSync(filePath)
     
   } catch (e) {
     console.log(e.message)
@@ -68,27 +58,3 @@ app.listen('5000', () => {
 // })
 
 // res.json(response.data)
-
-
-
-
-// fetch option //
-
-// try {
-
-//   const res = await fetch('https://api.openai.com/v1/audio/transcriptions', {
-//     headers: {
-//       Authorization: `Bearer ${process.env.API}`,
-//     },
-//     method: 'POST',
-//     body: formData,
-//   })
-
-//   const data = await res.json()
-
-//   res.json(data)
-
-// } catch (e) {
-//   console.log(e.message)
-//   res.status(500).json({msg: `error sending request to openai: ${e.message}`})
-// }
