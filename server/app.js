@@ -7,7 +7,7 @@ const {Readable} = require('stream')
 
 
 const app = express()
-const upload = multer()
+const upload = multer({ limits: { fileSize: 100 * 1024 * 1024 } })
 
 app.use(cors())
 
@@ -30,7 +30,7 @@ app.post('/api/transcribe', upload.single('file'), async (req, res) => {
     res.json(data.data.text)
     
   } catch (e) {
-    console.log(e.message)
+    console.log(e)
     res.status(500).json({ msg: `error sending request to openai: ${e.message}` })
   }
 
