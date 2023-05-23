@@ -27,8 +27,6 @@ const Home: NextPage = () => {
 
   const handleSubmit = async () => {
     setLoading(true)
-    console.log(videofile)
-    console.log(...formData)
     try {
       const response = await axios.post('http://localhost:5000/api/transcribe', formData, {
         headers: {
@@ -36,7 +34,7 @@ const Home: NextPage = () => {
         }
       })
 
-      setConvertedText(response.data.text)
+      setConvertedText(response.data)
 
     } catch (error: any) {
       console.log(error.message)
