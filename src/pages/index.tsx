@@ -27,6 +27,8 @@ const Home: NextPage = () => {
 
   const handleSubmit = async () => {
     setLoading(true)
+    console.log(videofile)
+    console.log(...formData)
     try {
       const response = await fetch('http://localhost:5000/api/transcribe', {
         method: 'POST',

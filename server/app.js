@@ -23,10 +23,12 @@ app.post('/api/transcribe', upload.single('file'), async (req, res) => {
     const response = await axios.post('https://api.openai.com/v1/audio/transcriptions', formData, {
       headers: {
         'Authorization': `Bearer ${process.env.API}`,
+        'Content-type': 'multipart/form-data'
       }
     })
 
     res.json(response.data)
+    
   } catch (e) {
     console.log(e.message)
     res.status(500).json({ msg: `error sending request to openai: ${e.message}` })
