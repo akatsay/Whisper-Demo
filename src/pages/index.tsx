@@ -53,7 +53,7 @@ const Home: NextPage = () => {
           accept='video/mp4,video/x-m4v,video/*' 
         />
         <button  
-          disabled={!videofile && true}
+          disabled={!videofile ? true : loading ? true : false}
           className='button' 
           onClick={handleSubmit}
         >

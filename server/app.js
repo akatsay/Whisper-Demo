@@ -25,12 +25,11 @@ app.post('/api/transcribe', upload.single('file'), async (req, res) => {
     })
     const openai = new OpenAIApi(configuration)
 
-    const data = await openai.createTranscription(stream, 'whisper-1', 'en')
-    console.log(data.data.text)
+    const data = await openai.createTranscription(stream, 'whisper-1')
     res.json(data.data.text)
     
   } catch (e) {
-    console.log(e)
+    console.log(e.message)
     res.status(500).json({ msg: `error sending request to openai: ${e.message}` })
   }
 
